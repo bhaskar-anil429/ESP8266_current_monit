@@ -1,36 +1,33 @@
+
 // Distributed with a free-will license.
 // Use it any way you want, profit or free, provided it fits in the licenses of its associated works.
 // PECMAC125A
 // This code is designed to work with the PECMAC125A_DLCT03C20 I2C Mini Module available from ControlEverything.com.
 // https://www.controleverything.com/content/Current?sku=PECMAC125A_DLCT03C20#tabs-0-product_tabset-2
-
 #include <ESP8266WiFi.h>
 #include <WiFiClient.h>
 #include <ESP8266WebServer.h>
 #include <Wire.h>
 
-// PECMAC125A I2C address is 2A(42)
 #define Addr 0x2A
-
+///// enter your wifi login info///////////
 const char* ssid = "your ssid network";
 const char* password = "your password";
-float humidity, cTemp, fTemp;
-
+unsigned int data[36];
+int typeOfSensor = 0;
+int maxCurrent = 0;
+int noOfChannel = 0;
 ESP8266WebServer server(80);
 
 void handleroot()
 {
- unsigned int data[36];
-int typeOfSensor = 0;
-int maxCurrent = 0;
-int noOfChannel = 0;
-void setup()
-{
-  // Initialise I2C communication as MASTER
-  Wire.begin();
-  // Initialise Serial Communication, set baud rate = 9600
-  Serial.begin(9600);
-
+  server.sendContent
+  ("<html><head><meta http-equiv='refresh' content='5'</meta>"
+   "<h1 style=text-align:center;font-size:300%;color:blue;font-family:britannic bold;>CONTROL EVERYTHING</h1>"
+   "<h3 style=text-align:center;font-family:courier new;><a href=http://www.controleverything.com/ target=_blank>www.controleverything.com</a></h3><hr>"
+   "<h2 style=text-align:center;font-family:tahoma;><a href=https://www.controleverything.com/content/Current?sku=PECMAC125A_DLCT03C20#tabs-0-product_tabset-2 \n"
+   "target=_blank>Daniel Energy Monitor Controller</a></h2>");
+   
   // Start I2C transmission
   Wire.beginTransmission(Addr);
   // Command header byte-1
@@ -69,8 +66,7 @@ void setup()
   typeOfSensor = data[0];
   maxCurrent = data[1];
   noOfChannel = data[2];
-
-  // Output data to serial monitor
+ // Output data to serial monitor
   Serial.print("Type Of Sensor : ");
   Serial.println(typeOfSensor);
   Serial.print("Max Current : ");
@@ -78,12 +74,8 @@ void setup()
   Serial.println(" Amp");
   Serial.print("No. Of Channel : ");
   Serial.println(noOfChannel);
-  delay(300);
-}
 
-void loop()
-{
-  for (int j = 1; j < noOfChannel + 1; j++)
+ for (int j = 1; j < noOfChannel + 1; j++)
   {
     // Start I2C Transmission
     Wire.beginTransmission(Addr);
@@ -126,31 +118,22 @@ void loop()
     Serial.print("Current Value : ");
     Serial.println(current);
     delay(1000);
-     // Output data to web server
-  server.sendContent
-  ("<html><head><meta http-equiv='refresh' content='5'</meta>"
-   "<h1 style=text-align:center;font-size:300%;color:blue;font-family:britannic bold;>CONTROL EVERYTHING</h1>"
-   "<h3 style=text-align:center;font-family:courier new;><a href=http://www.controleverything.com/ target=_blank>www.controleverything.com</a></h3><hr>"
-   "<h2 style=text-align:center;font-family:tahoma;><a href=https://www.controleverything.com/content/Current?sku=PECMAC125A_DLCT03C20#tabs-0-product_tabset-2 \n"
-   "target=_blank>Current Moni Controller</a></h2>");
-  server.sendContent
-  ("<h3 style=text-align:center;font-family:tahoma;> Channel Number = " + String(current) + " Amp");
-//  server.sendContent
-//  ("<h3 style=text-align:center;font-family:tahoma;>Temperature in Celsius = " + String(cTemp) + " C");
-//  server.sendContent
-//  ("<h3 style=text-align:center;font-family:tahoma;>Temperature in Fahrenheit = " + String(fTemp) + " F");
-  delay(300);
-//  }
-}
-  }
-  
+ 
 
+  // Output data to web server
+    server.sendContent
+  ("<h3 style=text-align:center;font-family:tahoma;>Channel Number = " + String(j) + " ");
+  server.sendContent
+  ("<h3 style=text-align:center;font-family:tahoma;>Current Value = " + String(current) + " Amp");
+  
+  
+  }
 }
 
 void setup()
 {
   // Initialise I2C communication as MASTER
-  Wire.begin(2, 14);
+  Wire.begin(12, 14);
   // Initialise serial communication, set baud rate = 115200
   Serial.begin(115200);
 
