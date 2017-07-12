@@ -126,24 +126,25 @@ void loop()
     Serial.print("Current Value : ");
     Serial.println(current);
     delay(1000);
-//  }
-}
-  }
-  
-  // Output data to web server
+     // Output data to web server
   server.sendContent
   ("<html><head><meta http-equiv='refresh' content='5'</meta>"
    "<h1 style=text-align:center;font-size:300%;color:blue;font-family:britannic bold;>CONTROL EVERYTHING</h1>"
    "<h3 style=text-align:center;font-family:courier new;><a href=http://www.controleverything.com/ target=_blank>www.controleverything.com</a></h3><hr>"
-   "<h2 style=text-align:center;font-family:tahoma;><a href=https://www.controleverything.com/content/Humidity?sku=SHT25_I2CS#tabs-0-product_tabset-2 \n"
-   "target=_blank>SHT25 Sensor I2C Mini Module</a></h2>");
+   "<h2 style=text-align:center;font-family:tahoma;><a href=https://www.controleverything.com/content/Current?sku=PECMAC125A_DLCT03C20#tabs-0-product_tabset-2 \n"
+   "target=_blank>Current Moni Controller</a></h2>");
   server.sendContent
-  ("<h3 style=text-align:center;font-family:tahoma;>Relative Humidity = " + String(humidity) + " %RH");
-  server.sendContent
-  ("<h3 style=text-align:center;font-family:tahoma;>Temperature in Celsius = " + String(cTemp) + " C");
-  server.sendContent
-  ("<h3 style=text-align:center;font-family:tahoma;>Temperature in Fahrenheit = " + String(fTemp) + " F");
+  ("<h3 style=text-align:center;font-family:tahoma;> Channel Number = " + String(current) + " Amp");
+//  server.sendContent
+//  ("<h3 style=text-align:center;font-family:tahoma;>Temperature in Celsius = " + String(cTemp) + " C");
+//  server.sendContent
+//  ("<h3 style=text-align:center;font-family:tahoma;>Temperature in Fahrenheit = " + String(fTemp) + " F");
   delay(300);
+//  }
+}
+  }
+  
+
 }
 
 void setup()
